@@ -27,7 +27,8 @@ struct Weather: Decodable, Identifiable {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let day = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .day)
-        date = try container.decode(Date.self, forKey: .date)
+        let dateInSeconds = try container.decode(Double.self, forKey: .date)
+        date = Date(timeIntervalSince1970: dateInSeconds)
         condition = try day.decode(Condition.self, forKey: .condition)
         temperature = Int((try day.decode(Double.self, forKey: .temperature)).rounded())
         windSpeed = Int((try day.decode(Double.self, forKey: .windSpeed)).rounded())
